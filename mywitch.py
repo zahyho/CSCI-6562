@@ -5,14 +5,14 @@ class MyWitch(pygame.sprite.Sprite):
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image1 = pygame.image.load("").convert_alpha()
-        self.image2 = pygame.image.load("").convert_alpha()
+        self.image1 = pygame.image.load("./images/my_witch_1.png").convert_alpha()
+        self.image2 = pygame.image.load("./images/my_witch_2.png").convert_alpha()
         self.destroy_images = []
         self.destroy_images.extend([
-            pygame.image.load("").convert_alpha(),
-            pygame.image.load("").convert_alpha(),
-            pygame.image.load("").convert_alpha(),
-            pygame.image.load("").convert_alpha()
+            pygame.image.load("./images/my_witch_d1.png").convert_alpha(),
+            pygame.image.load("./images/my_witch_d2.png").convert_alpha(),
+            pygame.image.load("./images/my_witch_d3.png").convert_alpha(),
+            pygame.image.load("./images/my_witch_d4.png").convert_alpha()
             ])
         self.rect = self.image1.get_rect()
         self.width, self.height = bg_size[0], bg_size[1]

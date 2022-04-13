@@ -1,14 +1,18 @@
 from turtle import position
 import pygame
 import sys
+
 import enemy
 import mywitch
 import magic
+# from moviepy.editor import *
 import traceback
 
 from pygame.locals import *
 from random import *
 from test import *
+
+import speech_recognition as sr
 
 pygame.init()
 pygame.mixer.init()
@@ -18,50 +22,81 @@ screen = pygame.display.set_mode(bg_size)
 pygame.display.set_caption("WitchGame")
 
 background = pygame.image.load("./images/back_image.jpg").convert()
+bg1 = pygame.image.load("./images/back_image.jpg")
+bg2 = pygame.image.load("./images/back_image.jpg")
+menu_back = pygame.image.load("./images/menu_back_2.png")
+y1 = 0
+y2 = -700
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-pygame.mixer.music.load("./music/menu_BGM.wav")
-pygame.mixer.music.set_volume(0.2)
 magic_sound = pygame.mixer.Sound("./music/magic_sound.wav")
-magic_sound.set_volume(0.2)
+magic_sound.set_volume(0.01)
 extramagic_sound = pygame.mixer.Sound("./music/extra_magic_sound.wav")
-extramagic_sound.set_volume(0.2)
+extramagic_sound.set_volume(0.05)
 me_down_sound = pygame.mixer.Sound("./music/death.wav")
-me_down_sound.set_volume(0.2)
+me_down_sound.set_volume(0.05)
 enemy1_down_sound = pygame.mixer.Sound("./music/ene_1_death.wav")
-enemy1_down_sound.set_volume(0.2)
+enemy1_down_sound.set_volume(0.05)
 enemy2_down_sound = pygame.mixer.Sound("./music/ene_2_death.wav")
-enemy2_down_sound.set_volume(0.2)
+enemy2_down_sound.set_volume(0.05)
 
 clock = pygame.time.Clock()
 
+
 def menu():
     """ This is the menu that waits you to click the s key to start """
+    pygame.mixer.init()
+    pygame.mixer.music.load("./music/menu_BGM.wav")
+    pygame.mixer.music.play(-1)
+    title_font = pygame.font.Font("./font/font.ttf", 58)
     while True:
+        screen.fill((50, 50, 50))
+        screen.blit(menu_back, (0,0))
+        title = title_font.render("Whichs Battle", True, (255, 255, 255))
+        title_rect = title.get_rect()
+        title_rect.left, title_rect.top = (width - title_rect.width) // 2, height // 5
+        screen.blit(title, title_rect)
 
-        screen.fill((50,50,50))
-        b1 = button(screen, (200, 400), "Quit")
-        b2 = button(screen, (193, 500), "Start")
+        b1 = button(screen, (150, 300), "Start")
+        b2 = button(screen, (170, 400), "Quit")
 
         for event in pygame.event.get():
+
             if (event.type == pygame.QUIT):
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if b1.collidepoint(pygame.mouse.get_pos()):
+                    main()
+                elif b2.collidepoint(pygame.mouse.get_pos()):
                     pygame.quit()
                     sys.exit()
-                elif b2.collidepoint(pygame.mouse.get_pos()):
-                    main()
         pygame.display.update()
         clock.tick(60)
     pygame.quit()
 
+
+def bg_update():
+    global y1, y2
+    y1 += 1
+    y2 += 1
+    screen.blit(bg1, (0, y1))
+    screen.blit(bg2, (0, y2))
+
+    if y1 > 700:
+        y1 = -700
+
+    if y2 > 700:
+        y2 = -700
+
+    return y1, y2
+
+
 def main():
-    pygame.mixer.music.play(-1)
+    global y1, y2
 
     me = mywitch.MyWitch(bg_size)
     enemies = pygame.sprite.Group()
@@ -132,6 +167,10 @@ def main():
     delay = 100
 
     running = True
+    pygame.mixer.init()
+    pygame.mixer.music.load("./music/level1_bgm.wav")
+    pygame.mixer.music.set_volume(20)
+    pygame.mixer.music.play(-1)
 
     while running:
         for event in pygame.event.get():
@@ -143,20 +182,29 @@ def main():
                 pygame.time.set_timer(INVINCIBLE_TIME, 0)
 
         if level == 1 and score > 2000:
+            """clip = VideoFileClip('').subclip(0, 3)
+            clip.preview()
+            clip.close()"""
             level = 2
-            # 增加3个初始怪物和2个邪恶巫师
-            add_enemies1(enemies1, enemies, 3, bg_size)
+            score = 0
+            pygame.mixer.init()
+            pygame.mixer.music.load("./music/level2_bgm.wav")
+            pygame.mixer.music.set_volume(20)
+            pygame.mixer.music.play(-1)
+            # 增加1个初始怪物和2个邪恶巫师
+            add_enemies1(enemies1, enemies, 1, bg_size)
             add_enemies2(enemies2, enemies, 2, bg_size)
             # 提升初始怪物的速度
-            inc_speed(enemies1, 1)
+            inc_speed(enemies1, 0.1)
 
-        screen.blit(background, (0, 0))
+        y1, y2 = bg_update()
 
         if life_num:
             # 检测用户的键盘操作
             key_pressed = pygame.key.get_pressed()
-            is_extramagic = input_key(key_pressed, is_extramagic, me)
-
+            input_key(key_pressed, me)
+            # is_extramagic = input_key(key_pressed, me)
+            # is_extramagic = magic_speech(is_extramagic)
 
             # 发射魔法
             if not (delay % 10):
@@ -186,7 +234,8 @@ def main():
             score = draw_enemies(enemies1, screen, delay, e1_destroy_index, enemy1_down_sound, score)
 
             # 绘制第二关敌人：
-            score = draw_enemies(enemies2, screen, delay, e2_destroy_index, enemy2_down_sound, score)
+            if level == 2:
+                score = draw_enemies(enemies2, screen, delay, e2_destroy_index, enemy2_down_sound, score)
 
             # 检测我方巫师是否产生碰撞
             enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
@@ -222,7 +271,7 @@ def main():
             # 绘制剩余生命数量
             if life_num:
                 for i in range(life_num):
-                    screen.blit(life_image, (width - 10 - (i + 1) * life_rect.width, height - 10 - life_rect.height))
+                    screen.blit(life_image, (width + 50 - (i + 1) * life_rect.width, height + 50 - life_rect.height))
 
             # 绘制得分
             score_text = score_font.render("Score : %s" % str(score), True, WHITE)
@@ -257,7 +306,8 @@ def main():
 
             gameover_text2 = gameover_font.render(str(score), True, (255, 255, 255))
             gameover_text2_rect = gameover_text2.get_rect()
-            gameover_text2_rect.left, gameover_text2_rect.top = (width - gameover_text2_rect.width) // 2, gameover_text1_rect.bottom + 10
+            gameover_text2_rect.left, gameover_text2_rect.top = (
+                                                                            width - gameover_text2_rect.width) // 2, gameover_text1_rect.bottom + 10
             screen.blit(gameover_text2, gameover_text2_rect)
 
             again_rect.left, again_rect.top = (width - again_rect.width) // 2, gameover_text2_rect.bottom + 50
@@ -297,8 +347,8 @@ def main():
 
 if __name__ == "__main__":
     try:
-        # main()
         menu()
+        # main()
     except SystemExit:
         pass
     except:

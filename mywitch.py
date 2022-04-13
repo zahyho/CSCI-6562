@@ -50,4 +50,3 @@ class MyWitch(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = (self.width - self.rect.width) // 2, self.height - self.rect.height - 60
         self.active = True
         self.invincible = True
-

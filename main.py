@@ -61,13 +61,18 @@ def menu():
         title_rect.left, title_rect.top = (width - title_rect.width) // 2, height // 5
         screen.blit(title, title_rect)
 
-        b1 = button(screen, (150, 300), "Start")
-        b2 = button(screen, (170, 400), "Quit")
+        b1 = button(screen, (150, 300), "Start", (255,255,255))
+        b2 = button(screen, (170, 400), "Quit", (255,255,255))
 
         for event in pygame.event.get():
 
             if (event.type == pygame.QUIT):
                 pygame.quit()
+            if event.type == pygame.MOUSEMOTION:
+                if b1.collidepoint(pygame.mouse.get_pos()):
+                    b1 = button(screen, (150, 300), "Start", (0,0,0))
+                elif b2.collidepoint(pygame.mouse.get_pos()):
+                    b2 = button(screen, (170, 400), "Quit", (0,0,0))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if b1.collidepoint(pygame.mouse.get_pos()):
                     main()
@@ -77,6 +82,49 @@ def menu():
         pygame.display.update()
         clock.tick(60)
     pygame.quit()
+
+def voice_control():
+    record = True
+
+    while record:
+        screen.fill((50, 50, 50))
+        font_1 = pygame.font.Font("./font/font.ttf", 48)
+        font_2 = pygame.font.Font("./font/font.ttf", 80)
+        texts = font_1.render("Speak the Magic Spell!", True, (255, 255, 255))
+        texts_rect = texts.get_rect()
+        texts_rect.left, texts_rect.top = (width - texts_rect.width) // 2, height // 5
+        screen.blit(texts, texts_rect)
+        texts_2 = font_2.render("Lighting or Fire", True, (255, 255, 255))
+        texts_2_rect = texts_2.get_rect()
+        texts_2_rect.left, texts_2_rect.top = (width - texts_2_rect.width) // 2, height // 2
+        screen.blit(texts_2, texts_2_rect)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            r = sr.Recognizer()
+            with sr.Microphone() as source:
+                print ('Say Something!')
+                audio = r.listen(source)
+            magic_spell_1 = "fire"
+            magic_spell_2 = "lighting"
+            data = ""
+            try:
+                data = r.recognize_google(audio)
+                data = data.lower()
+                print("word: ", data)
+            except sr.UnknownValueError:
+                pass
+            except sr.RequestError as e:
+                pass
+
+            if data == magic_spell_2:
+                state = True
+            elif data == magic_spell_1:
+                state = False
+            return state
+        pygame.display.update()
+        clock.tick(5)
 
 
 def bg_update():
@@ -203,6 +251,9 @@ def main():
             # 检测用户的键盘操作
             key_pressed = pygame.key.get_pressed()
             input_key(key_pressed, me)
+            if input_key2(key_pressed):
+                is_extramagic = voice_control()
+                # is_extramagic = magic_speech(is_extramagic)
             # is_extramagic = input_key(key_pressed, me)
             # is_extramagic = magic_speech(is_extramagic)
 

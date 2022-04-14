@@ -1,17 +1,74 @@
+#%%
+#!/usr/bin/env python3
+# Requires PyAudio and PySpeech.
+ 
 import speech_recognition as sr
-
-# obtain audio from the microphone
-r = sr.Recognizer()
-with sr.Microphone() as source:
-    print("Say something!")
-    audio = r.listen(source)
-
-try:
-    # for testing purposes, we're just using the default API key
-    # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-    # instead of `r.recognize_google(audio)`
-    print("Google Speech Recognition thinks you said " + r.recognize_google(audio))
-except sr.UnknownValueError:
-    print("Google Speech Recognition could not understand audio")
-except sr.RequestError as e:
-    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+from time import ctime
+import time
+import os
+from gtts import gTTS
+import pygame
+import sys
+ 
+ 
+ 
+def speak(audioString):
+    
+    # print(audioString)
+    tts = gTTS(text=audioString, lang='en')
+    tts.save("audio.mp3")
+    audio = pygame.mixer.Sound("audio.mp3")
+    audio.play()
+    #os.system("mpg321 audio.mp3")
+ 
+ 
+def recordAudio():
+    # Record Audio
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+ 
+    # Speech recognition using Google Speech Recognition
+    data = ""
+    try:
+        data = r.recognize_google(audio)
+ 
+ 
+    except sr.UnknownValueError:
+        pass
+    except sr.RequestError as e:
+        pass
+        # print("Could not request results from Google Speech Recognition service; {0}".format(e))
+ 
+    return data
+ 
+ 
+ 
+pygame.init()
+pygame.mixer.init()
+font = pygame.font.Font("./font/font.TTF", 28)
+def render(x):
+    return font.render(x, 1, (255,255,255))
+screen = pygame.display.set_mode((400, 400))
+# pygame.display.set_caption("Say something")
+clock = pygame.time.Clock()
+loop = 1
+say = font.render("Say something:", 1, (255,255,255))
+while loop:
+    screen.fill(0)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            loop = 0
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                loop = 0
+    data = recordAudio()
+    text_surface = font.render(data, 1, (255,255,255))
+    screen.blit(say, (0,0))
+    screen.blit(text_surface, (0,50))
+    # jarvis(data)
+    pygame.display.update()
+    clock.tick(2)
+print("Game over")
+pygame.quit()
+sys.exit()

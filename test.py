@@ -4,6 +4,8 @@ import sys
 from turtle import position
 import pygame
 import enemy
+import time
+from gtts import gTTS
 
 from pygame.locals import *
 from random import *
@@ -30,16 +32,11 @@ def inc_speed(target, inc):
         each.speed += inc
 
 # create button
-def button(screen, position, text):
+def button(screen, position, text, color):
     font = pygame.font.Font("./font/font.ttf", 80)
-    text_render = font.render(text, 1, (255,255,255))
+    text_render = font.render(text, 1, color)
     x, y, w, h = text_render.get_rect()
     x, y = position
-    # pygame.draw.line(screen, (150, 150, 150), (x, y), (x + w , y), 5)
-    # pygame.draw.line(screen, (150, 150, 150), (x, y - 2), (x, y + h), 5)
-    # pygame.draw.line(screen, (50, 50, 50), (x, y + h), (x + w , y + h), 5)
-    # pygame.draw.line(screen, (50, 50, 50), (x + w , y+h), [x + w , y], 5)
-    # pygame.draw.rect(screen, (100, 100, 100), (x, y, w , h))
     return screen.blit(text_render, (x, y))
 
 def start():
@@ -75,25 +72,18 @@ def input_key(key_pressed, me):
     if key_pressed[K_d] or key_pressed[K_RIGHT]:
         me.moveRight()
 
-def input_key2(key_pressed, state, me):
-    if key_pressed[K_w] or key_pressed[K_UP]:
-        me.moveUp()
-    if key_pressed[K_s] or key_pressed[K_DOWN]:
-        me.moveDown()
-    if key_pressed[K_a] or key_pressed[K_LEFT]:
-        me.moveLeft()
-    if key_pressed[K_d] or key_pressed[K_RIGHT]:
-        me.moveRight()
+def input_key2(key_pressed):
     if key_pressed[K_l]:
-        if state == False:
-            state = True
-        else:
-            state = False
-    return state
+        return True
+    else:
+        return False
 
 def magic_speech(state):
+    
+
     r = sr.Recognizer()
     with sr.Microphone() as source:
+        print ('Say Something!')
         audio = r.listen(source)
     
     magic_spell = "fire"
@@ -101,6 +91,7 @@ def magic_speech(state):
     try:
         data = r.recognize_google(audio)
         data = data.lower()
+        print("word: ", data)
     except sr.UnknownValueError:
         pass
     except sr.RequestError as e:
@@ -110,5 +101,5 @@ def magic_speech(state):
         state = True
     else:
         state = False
-    
+    time.sleep(1)
     return state

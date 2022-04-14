@@ -16,7 +16,7 @@ class MyWitch(pygame.sprite.Sprite):
             ])
         self.rect = self.image1.get_rect()
         self.width, self.height = bg_size[0], bg_size[1]
-        self.rect.left, self.rect.top = (self.width - self.rect.width) // 2, self.height - self.rect.height - 60
+        self.rect.left, self.rect.top = (self.width - self.rect.width) // 2, self.height - self.rect.height
         self.speed = 10
         self.active = True
         self.invincible = False
@@ -29,10 +29,10 @@ class MyWitch(pygame.sprite.Sprite):
             self.rect.top = 0
 
     def moveDown(self):
-        if self.rect.bottom < self.height - 60:
+        if self.rect.bottom < self.height :
             self.rect.bottom += self.speed
         else:
-            self.rect.bottom = self.height - 60
+            self.rect.bottom = self.height
 
     def moveLeft(self):
         if self.rect.left > 0:
@@ -41,12 +41,12 @@ class MyWitch(pygame.sprite.Sprite):
             self.rect.top = 0
 
     def moveRight(self):
-        if self.rect.right < self.width:
+        if self.rect.right < self.width+70:
             self.rect.right += self.speed
         else:
-            self.rect.right = self.width
+            self.rect.right = self.width+70
 
     def reset(self):
-        self.rect.left, self.rect.top = (self.width - self.rect.width) // 2, self.height - self.rect.height - 60
+        self.rect.left, self.rect.top = (self.width - self.rect.width) // 2, self.height - self.rect.height
         self.active = True
         self.invincible = True

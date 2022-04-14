@@ -45,7 +45,12 @@ enemy2_down_sound = pygame.mixer.Sound("./music/ene_2_death.wav")
 enemy2_down_sound.set_volume(0.05)
 
 clock = pygame.time.Clock()
-
+enemies = pygame.sprite.Group()
+# Fire
+Fire_image = pygame.image.load("./images/extra_magic.png").convert_alpha()
+Fire_rect = Fire_image.get_rect()
+Fire_font = pygame.font.Font("./font/font.ttf", 48)
+Fire_num = 3
 
 def menu():
     """ This is the menu that waits you to click the s key to start """
@@ -83,10 +88,13 @@ def menu():
         clock.tick(60)
     pygame.quit()
 
+
+
 def voice_control():
     record = True
 
     while record:
+        global Fire_num
         screen.fill((50, 50, 50))
         font_1 = pygame.font.Font("./font/font.ttf", 48)
         font_2 = pygame.font.Font("./font/font.ttf", 80)
@@ -122,6 +130,11 @@ def voice_control():
                 state = True
             elif data == magic_spell_1:
                 state = False
+                if Fire_num:
+                    Fire_num -= 1
+                    for ei in enemies:
+                        if ei.rect.bottom > 0:
+                            ei.active = False
             return state
         pygame.display.update()
         clock.tick(5)
@@ -145,9 +158,9 @@ def bg_update():
 
 def main():
     global y1, y2
-
+    global Fire_image, Fire_rect, Fire_font, Fire_num
     me = mywitch.MyWitch(bg_size)
-    enemies = pygame.sprite.Group()
+
 
     # 生成第一关敌人
     enemies1 = pygame.sprite.Group()
@@ -155,21 +168,22 @@ def main():
 
     # 生成第二关敌人
     enemies2 = pygame.sprite.Group()
-    add_enemies2(enemies2, enemies, 15, bg_size)
+    add_enemies2(enemies2, enemies, 20, bg_size)
 
     # 生成魔法
     magic1 = []
     magic1_index = 0
     magic1_num = 4
     for i in range(magic1_num):
-        magic1.append(magic.Magic(me.rect.midtop))
+        magic1.append(magic.Magic((me.rect.centerx - 60, me.rect.centery - 200)))
 
     # 生成额外魔法
     extramagic = []
     extramagic_index = 0
-    extramagic_num = 4
-    for i in range(extramagic_num):
-        extramagic.append(magic.ExtraMagic(me.rect.midtop))
+    extramagic_num = 8
+    for i in range(extramagic_num//2):
+        extramagic.append(magic.ExtraMagic((me.rect.centerx - 33, me.rect.centery)))
+        extramagic.append(magic.ExtraMagic((me.rect.centerx + 33, me.rect.centery)))
 
     e1_destroy_index = 0
     e2_destroy_index = 0
@@ -181,12 +195,6 @@ def main():
 
     # 游戏难度
     level = 1
-
-    # extramagic
-    extramagic_image = pygame.image.load("./images/extra_magic.png").convert_alpha()
-    extramagic_rect = extramagic_image.get_rect()
-    extramagic_font = pygame.font.Font("./font/font.ttf", 48)
-    bomb_num = 3
 
     # 检测是否使用extramagic
     is_extramagic = False
@@ -229,6 +237,7 @@ def main():
                 me.invincible = False
                 pygame.time.set_timer(INVINCIBLE_TIME, 0)
 
+
         if level == 1 and score > 2000:
             """clip = VideoFileClip('').subclip(0, 3)
             clip.preview()
@@ -239,11 +248,9 @@ def main():
             pygame.mixer.music.load("./music/level2_bgm.wav")
             pygame.mixer.music.set_volume(20)
             pygame.mixer.music.play(-1)
-            # 增加1个初始怪物和2个邪恶巫师
-            add_enemies1(enemies1, enemies, 1, bg_size)
-            add_enemies2(enemies2, enemies, 2, bg_size)
-            # 提升初始怪物的速度
-            inc_speed(enemies1, 0.1)
+            # 增加邪恶巫师
+            enemies1.empty()
+            add_enemies2(enemies2, enemies, 5, bg_size)
 
         y1, y2 = bg_update()
 
@@ -262,11 +269,12 @@ def main():
                 magic_sound.play()
                 if is_extramagic:
                     magics = extramagic
-                    magics[extramagic_index].reset(me.rect.midtop)
+                    magics[extramagic_index].reset((me.rect.centerx - 160, me.rect.centery))
+                    magics[extramagic_index+1].reset((me.rect.centerx - 60, me.rect.centery))
                     extramagic_index = (extramagic_index + 2) % extramagic_num
                 else:
                     magics = magic1
-                    magics[magic1_index].reset(me.rect.midtop)
+                    magics[magic1_index].reset((me.rect.centerx - 60, me.rect.centery - 200))
                     magic1_index = (magic1_index + 1) % magic1_num
 
             # 检测是否击中敌人
@@ -313,11 +321,11 @@ def main():
                         me.reset()
                         pygame.time.set_timer(INVINCIBLE_TIME, 3 * 1000)
 
-            # extramagic数量显示
-            extramagic_text = extramagic_font.render("× %d" % bomb_num, True, WHITE)
-            text_rect = extramagic_text.get_rect()
-            screen.blit(extramagic_image, (10, height - 10 - extramagic_rect.height))
-            screen.blit(extramagic_text, (20 + extramagic_rect.width, height - 5 - text_rect.height))
+            # Fire数量显示
+            Fire_text = Fire_font.render("× %d" % Fire_num, True, WHITE)
+            text_rect = Fire_text.get_rect()
+            screen.blit(Fire_image, (10, height - 10 - Fire_rect.height))
+            screen.blit(Fire_text, (20 + Fire_rect.width, height - 5 - text_rect.height))
 
             # 绘制剩余生命数量
             if life_num:

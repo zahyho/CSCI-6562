@@ -5,7 +5,7 @@ import sys
 import enemy
 import mywitch
 import magic
-# from moviepy.editor import *
+from moviepy.editor import *
 import traceback
 
 from pygame.locals import *
@@ -61,7 +61,7 @@ def menu():
     while True:
         screen.fill((50, 50, 50))
         screen.blit(menu_back, (0,0))
-        title = title_font.render("Whichs Battle", True, (255, 255, 255))
+        title = title_font.render("Witchs Battle", True, (255, 255, 255))
         title_rect = title.get_rect()
         title_rect.left, title_rect.top = (width - title_rect.width) // 2, height // 5
         screen.blit(title, title_rect)
@@ -182,8 +182,8 @@ def main():
     extramagic_index = 0
     extramagic_num = 8
     for i in range(extramagic_num//2):
-        extramagic.append(magic.ExtraMagic((me.rect.centerx - 33, me.rect.centery)))
-        extramagic.append(magic.ExtraMagic((me.rect.centerx + 33, me.rect.centery)))
+        extramagic.append(magic.ExtraMagic((me.rect.centerx - 33, me.rect.centery-150)))
+        extramagic.append(magic.ExtraMagic((me.rect.centerx + 33, me.rect.centery-150)))
 
     e1_destroy_index = 0
     e2_destroy_index = 0
@@ -238,10 +238,10 @@ def main():
                 pygame.time.set_timer(INVINCIBLE_TIME, 0)
 
 
-        if level == 1 and score > 2000:
-            """clip = VideoFileClip('').subclip(0, 3)
+        if level == 1 and score > 100:
+            clip = VideoFileClip('video.mp4').subclip(0, 5)
             clip.preview()
-            clip.close()"""
+            clip.close()
             level = 2
             score = 0
             pygame.mixer.init()
@@ -269,8 +269,8 @@ def main():
                 magic_sound.play()
                 if is_extramagic:
                     magics = extramagic
-                    magics[extramagic_index].reset((me.rect.centerx - 160, me.rect.centery))
-                    magics[extramagic_index+1].reset((me.rect.centerx - 60, me.rect.centery))
+                    magics[extramagic_index].reset((me.rect.centerx - 160, me.rect.centery-150))
+                    magics[extramagic_index+1].reset((me.rect.centerx - 60, me.rect.centery-150))
                     extramagic_index = (extramagic_index + 2) % extramagic_num
                 else:
                     magics = magic1
@@ -336,6 +336,36 @@ def main():
             score_text = score_font.render("Score : %s" % str(score), True, WHITE)
             screen.blit(score_text, (10, 5))
 
+        if life_num and level == 2 and score > 0:
+            # 背景音乐停止
+            pygame.mixer.music.stop()
+            # 停止全部音效
+            pygame.mixer.stop()
+            enemies2.empty()
+            gameover_text5 = gameover_font.render("You Win", True, (255, 255, 255))
+            gameover_text5_rect = gameover_text5.get_rect()
+            gameover_text5_rect.left, gameover_text5_rect.top = (width - gameover_text5_rect.width) // 2, height // 3
+            screen.blit(gameover_text5, gameover_text5_rect)
+            again_rect.left, again_rect.top = (width - again_rect.width) // 2, gameover_text5_rect.bottom + 50
+            screen.blit(again_image, again_rect)
+            gameover_rect.left, gameover_rect.top = (width - again_rect.width) // 5, again_rect.bottom + 10
+            screen.blit(gameover_image, gameover_rect)
+            if pygame.mouse.get_pressed()[0]:
+                # 获取鼠标坐标
+                pos = pygame.mouse.get_pos()
+                # 如果用户点击“重新开始”
+                if again_rect.left < pos[0] < again_rect.right and \
+                        again_rect.top < pos[1] < again_rect.bottom:
+                    # 调用main函数，重新开始游戏
+                    main()
+                # 如果用户点击“结束游戏”
+                elif gameover_rect.left < pos[0] < gameover_rect.right and \
+                        gameover_rect.top < pos[1] < gameover_rect.bottom:
+                    # 退出游戏
+                    pygame.quit()
+                    sys.exit()
+
+
         # 游戏结束
         elif life_num == 0:
             # 背景音乐停止
@@ -365,8 +395,7 @@ def main():
 
             gameover_text2 = gameover_font.render(str(score), True, (255, 255, 255))
             gameover_text2_rect = gameover_text2.get_rect()
-            gameover_text2_rect.left, gameover_text2_rect.top = (
-                                                                            width - gameover_text2_rect.width) // 2, gameover_text1_rect.bottom + 10
+            gameover_text2_rect.left, gameover_text2_rect.top = (width - gameover_text2_rect.width) // 2, gameover_text1_rect.bottom + 10
             screen.blit(gameover_text2, gameover_text2_rect)
 
             again_rect.left, again_rect.top = (width - again_rect.width) // 2, gameover_text2_rect.bottom + 50
@@ -399,7 +428,6 @@ def main():
         delay -= 1
         if not delay:
             delay = 100
-
         pygame.display.flip()
         clock.tick(60)
 

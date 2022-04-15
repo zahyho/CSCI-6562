@@ -30,7 +30,7 @@ class Enemy1(pygame.sprite.Sprite):
     def reset(self):
         self.active = True
         self.rect.left = randint(0, self.width - self.rect.width)
-        self.rect.top = randint(-3 * self.height, 0)
+        self.rect.top = randint(-4 * self.height, 0)
 
 
 class Enemy2(pygame.sprite.Sprite):
@@ -59,5 +59,5 @@ class Enemy2(pygame.sprite.Sprite):
     def reset(self):
         self.active = True
         self.rect.left = randint(0, self.width - self.rect.width)
-        self.rect.top = randint(-3 * self.height, 0)
+        self.rect.top = randint(-4 * self.height, 0)
         self.invincible = False

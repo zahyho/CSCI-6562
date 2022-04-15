@@ -238,7 +238,7 @@ def main():
                 pygame.time.set_timer(INVINCIBLE_TIME, 0)
 
 
-        if level == 1 and score > 100:
+        if level == 1 and score > 2000:
             clip = VideoFileClip('video.mp4').subclip(0, 5)
             clip.preview()
             clip.close()
@@ -336,7 +336,7 @@ def main():
             score_text = score_font.render("Score : %s" % str(score), True, WHITE)
             screen.blit(score_text, (10, 5))
 
-        if life_num and level == 2 and score > 0:
+        if life_num and level == 2 and score > 4000:
             # 背景音乐停止
             pygame.mixer.music.stop()
             # 停止全部音效

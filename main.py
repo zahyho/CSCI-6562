@@ -47,7 +47,7 @@ enemy2_down_sound.set_volume(0.05)
 clock = pygame.time.Clock()
 enemies = pygame.sprite.Group()
 # Fire
-Fire_image = pygame.image.load("./images/extra_magic.png").convert_alpha()
+Fire_image = pygame.image.load("./images/fire.png").convert_alpha()
 Fire_rect = Fire_image.get_rect()
 Fire_font = pygame.font.Font("./font/font.ttf", 48)
 Fire_num = 3
@@ -184,6 +184,7 @@ def main():
     for i in range(extramagic_num//2):
         extramagic.append(magic.ExtraMagic((me.rect.centerx - 33, me.rect.centery-150)))
         extramagic.append(magic.ExtraMagic((me.rect.centerx + 33, me.rect.centery-150)))
+
 
     e1_destroy_index = 0
     e2_destroy_index = 0
@@ -340,8 +341,8 @@ def main():
             # Fire数量显示
             Fire_text = Fire_font.render("× %d" % Fire_num, True, WHITE)
             text_rect = Fire_text.get_rect()
-            screen.blit(Fire_image, (-20, height - 10 - Fire_rect.height))
-            screen.blit(Fire_text, (Fire_rect.width - 10, height - text_rect.height * 2))
+            screen.blit(Fire_image, (20, height - 30 - Fire_rect.height))
+            screen.blit(Fire_text, (Fire_rect.width + 20, height - text_rect.height * 2+30))
 
             # 绘制剩余生命数量
             life_text = life_font.render("Life : ", True, WHITE)

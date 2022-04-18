@@ -12,7 +12,7 @@ from random import *
 from test import *
 
 import speech_recognition as sr
-
+destory_index = 0
 def add_enemies1(group1, group2, num, bg_size):
     for i in range(num):
         e1 = enemy.Enemy1(bg_size)

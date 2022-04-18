@@ -9,17 +9,11 @@ class Enemy1(pygame.sprite.Sprite):
         self.image = pygame.image.load("./images/dragon_1.png").convert_alpha()
         self.destroy_images = []
         self.destroy_images.extend([
-            pygame.image.load("./images/images/fire_1.gif").convert_alpha()
-            # pygame.image.load("./images/images/fire_2.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_3.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_4.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_5.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_6.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_7.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_8.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_9.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_11.gif").convert_alpha(),
-            # pygame.image.load("./images/images/fire_13.gif").convert_alpha()
+            pygame.image.load("./images/images/1.png").convert_alpha(),
+            # pygame.image.load("./images/images/2.png").convert_alpha(),
+            # pygame.image.load("./images/images/3.png").convert_alpha(),
+            # pygame.image.load("./images/images/4.png").convert_alpha(),
+            # pygame.image.load("./images/images/5.png").convert_alpha()
         ])
         self.rect = self.image.get_rect()
         self.width, self.height = bg_size[0], bg_size[1]
@@ -49,7 +43,7 @@ class Enemy2(pygame.sprite.Sprite):
         self.image = pygame.image.load("./images/en_witch.png").convert_alpha()
         self.destroy_images = []
         self.destroy_images.extend([
-            pygame.image.load("./images/images/fire_1.gif").convert_alpha()
+            pygame.image.load("./images/images/1.png").convert_alpha()
             # pygame.image.load("./images/images/fire_2.gif").convert_alpha(),
             # pygame.image.load("./images/images/fire_3.gif").convert_alpha(),
             # pygame.image.load("./images/images/fire_4.gif").convert_alpha(),

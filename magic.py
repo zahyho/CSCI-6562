@@ -46,7 +46,7 @@ class ExtraMagic(pygame.sprite.Sprite):
 class Fire(pygame.sprite.Sprite):
     def __init__(self, bg_size):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("./images/extra_magic.png").convert_alpha()
+        self.image = pygame.image.load("./images/fire.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.width, self.height = bg_size[0], bg_size[1]
 

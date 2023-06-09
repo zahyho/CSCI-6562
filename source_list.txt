@@ -1,0 +1,37 @@
+images:
+    for main.py
+        -background_image: back_image.jpg (480 x 700)
+        -extramagic: extra_magic.png
+        -life: life.png
+        -again: contine.png
+        -game_over: game_over.png
+    
+    for mywitch.py
+        -image1: my_witch_1.png
+        -image2: my_witch_2.png
+        -destroy_images_1: my_witch_d1.png
+        -destroy_images_2: my_witch_d2.png
+        -destroy_images_3: my_witch_d3.png
+        -destroy_images_4: my_witch_d4.png
+
+    for magic.py
+        -magic: magic.png
+        -extra_magic: extra_magic.png
+
+    for enemy.py
+        -enemy1_image: ene_1.png
+        -enemy1_destory_image_1: ene_1d1.png
+        -enemy1_destory_image_2: ene_1d2.png
+        -enemy2_image: ene_2.png
+        -enemy2_destory_image: ene_2d1.png
+
+sounds:
+    for main.py
+        -background_music: menu_BGM.wav
+        -magic_sound: magic_sound.wav
+        -extra_magic_sound: extra_magic_sound.wav
+        -me_down_sound: death.wav
+        -enemy1_down_sound: ene_1_death.wav
+        -enemy2_down_sound: ene_2_death.wav
+
+

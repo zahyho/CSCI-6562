@@ -5,7 +5,7 @@ class Magic(pygame.sprite.Sprite):
     def __init__(self, position):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load("").convert_alpha()
+        self.image = pygame.image.load("./images/magic.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = position
         self.speed = 15
@@ -26,7 +26,7 @@ class ExtraMagic(pygame.sprite.Sprite):
     def __init__(self, position):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load("").convert_alpha()
+        self.image = pygame.image.load("./images/extra_magic.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = position
         self.speed = 15
@@ -41,3 +41,12 @@ class ExtraMagic(pygame.sprite.Sprite):
     def reset(self, position):
         self.rect.left, self.rect.top = position
         self.active = True
+
+
+class Fire(pygame.sprite.Sprite):
+    def __init__(self, bg_size):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("./images/fire.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.width, self.height = bg_size[0], bg_size[1]
+
